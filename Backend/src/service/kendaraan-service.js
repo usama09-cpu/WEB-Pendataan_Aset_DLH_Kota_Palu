@@ -9,7 +9,6 @@ import image from "../helper/image.js";
 import qrcode from "../helper/qr.js";
 import dayjs from "dayjs";
 
-// Mendapatkan semua kendaraan
 const getKendaraan = async () => {
   const result = await kendaraanRepositori.getKendaraan();
   if (result.length === 0) {
@@ -18,7 +17,6 @@ const getKendaraan = async () => {
   return result;
 };
 
-// Mendapatkan kendaraan berdasarkan nomor polisi
 const getKendaraanByNoPol = async (no_polisi) => {
   const result = await kendaraanRepositori.getKendaraanByNoPol(no_polisi);
   if (!result) {
