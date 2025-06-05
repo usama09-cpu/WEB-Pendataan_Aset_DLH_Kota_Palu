@@ -9,11 +9,20 @@ dotEnv.config();
 
 const web = express();
 
-web.use(cors());
+web.use(
+  cors({
+    origin: "http://localhost:5173", // HARUS alamat spesifik, bukan '*'
+    credentials: true,
+  })
+);
+
 web.use(express.json());
 web.use(cookieParser());
 
-web.use(publicRouter);
+// web.use(publicRouter);
 web.use(userRouter);
+
+web.use('/static', express.static(path.join(__dirname, 'public')));
+
 
 export default web;

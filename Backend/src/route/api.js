@@ -15,6 +15,7 @@ import servisBerkalaAlatBeratController from "../controller/servisBerkalaAlatBer
 import servisBerkalaAlatKerjaController from "../controller/servisBerkalaAlatKerja-controller.js";
 import servisBerkalaAcController from "../controller/serrvisBerkalaAc-controller.js";
 import servisBerkalaQrCodeController from "../controller/servisBerkalaQrCode-controller.js";
+import dashboardController from "../controller/dashboard-controller.js";
 
 const userRouter = new express.Router();
 
@@ -342,6 +343,13 @@ userRouter.put(
 userRouter.get(
   "/api/servisberkalaqrcode/:no_unik",
   servisBerkalaQrCodeController.getServisBerkalaQrCode
+);
+
+// ============= Dashboard ==============
+userRouter.get(
+  "/api/dashboad",
+  authMiddleware,
+  dashboardController.getDashboard
 );
 
 export { userRouter };

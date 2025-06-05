@@ -8,6 +8,9 @@ const authMiddleware = (req, res, next) => {
   // Ambil token dari cookies
   const tokenFromCookie = req.cookies.token;
 
+  console.log(tokenFromHeader);
+  console.log(tokenFromCookie);
+
   // Cek apakah token ada di header dan cookies
   if (!tokenFromHeader || !tokenFromCookie) {
     return res
@@ -16,7 +19,7 @@ const authMiddleware = (req, res, next) => {
   }
 
   // Cek apakah token dari header dan cookies tidak sama
-  if (tokenFromHeader !== tokenFromCookie) {
+  if (tokenFromHeader != tokenFromCookie) {
     return res
       .status(401)
       .json({ message: "Akses ditolak. Token tidak valid." });

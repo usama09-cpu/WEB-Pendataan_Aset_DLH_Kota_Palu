@@ -10,7 +10,7 @@ const uploadImage = async (
   format = "jpeg",
   width = 800
 ) => {
-  const folderPath = path.join("uploads", folder);
+  const folderPath = path.join("public/uploads", folder);
 
   // Pastikan folder ada
   if (!fs.existsSync(folderPath)) {
@@ -32,7 +32,7 @@ const uploadImage = async (
 
 // --- Fungsi Hapus Gambar ---
 const deleteImage = async (folder, filename) => {
-  const filePath = path.join("uploads", folder, filename);
+  const filePath = path.join("public/uploads", folder, filename);
 
   if (fs.existsSync(filePath)) {
     await fs.promises.unlink(filePath); // Hapus file gambar lama
