@@ -8,9 +8,6 @@ const authMiddleware = (req, res, next) => {
   // Ambil token dari cookies
   const tokenFromCookie = req.cookies.token;
 
-  console.log(tokenFromHeader);
-  console.log(tokenFromCookie);
-
   // Cek apakah token ada di header dan cookies
   if (!tokenFromHeader || !tokenFromCookie) {
     return res
