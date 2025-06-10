@@ -4,6 +4,12 @@ import { userRouter } from "../route/api.js";
 import dotEnv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 dotEnv.config();
 
@@ -22,7 +28,6 @@ web.use(cookieParser());
 // web.use(publicRouter);
 web.use(userRouter);
 
-web.use('/static', express.static(path.join(__dirname, 'public')));
-
+web.use("/static", express.static(path.join(__dirname, "../../public")));
 
 export default web;

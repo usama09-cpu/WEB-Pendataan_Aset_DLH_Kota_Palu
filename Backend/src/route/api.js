@@ -347,7 +347,7 @@ userRouter.get(
 
 // ============= Dashboard ==============
 userRouter.get(
-  "/api/dashboad",
+  "/api/dashboard",
   authMiddleware,
   dashboardController.getDashboard
 );

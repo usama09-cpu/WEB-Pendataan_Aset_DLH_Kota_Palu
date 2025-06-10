@@ -11,14 +11,14 @@ const getDashboard = async () => {
   const countTanaman = (await dashboardRepositori.getCountTanaman()) ?? 0;
 
   const data = {
-    R2: countR2,
-    R3: countR3,
-    R4: countR4,
-    R6: countR6,
-    AlatBerat: countAlatBerat,
-    AlatKerja: countAlatKerja,
-    Ac: countAc,
-    Tanaman: countTanaman,
+    R2: countR2.R2,
+    R3: countR3.R3,
+    R4: countR4.R4,
+    R6: countR6.R6,
+    AlatBerat: countAlatBerat.AlatKerja,
+    AlatKerja: countAlatKerja.AlatBerat,
+    Ac: countAc.Ac,
+    Tanaman: countTanaman.Tanaman,
   };
 
   return data;
