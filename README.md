@@ -90,7 +90,7 @@ Frontend akan berjalan di: `http://localhost:5173`
 Pastikan `baseURL` Axios mengarah ke backend:
 ```js
 // Contoh file src/services/api.js
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "http://localhost:3000/api";
 ```
 
 ---
@@ -98,12 +98,12 @@ const BASE_URL = "http://localhost:5000/api";
 ## 🏗️ Arsitektur Sistem
 
 ```
-[ Frontend (React.js) ] ←→ [ Backend (Express.js) ] ←→ [ MongoDB ]
+[ Frontend (React.js) ] ←→ [ Backend (Express.js) ] ←→ [ MySQL ]
 ```
 
 - Frontend bertugas menampilkan antarmuka dan mengirim permintaan ke backend.
 - Backend bertugas menangani logika bisnis, autentikasi, dan komunikasi dengan database.
-- MongoDB menyimpan data aset, pengguna, dan metadata gambar.
+- MySQL menyimpan data aset, pengguna, dan metadata gambar.
 
 ---
 
