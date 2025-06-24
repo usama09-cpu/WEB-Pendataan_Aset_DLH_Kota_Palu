@@ -32,7 +32,7 @@ const updateServisBerkalaKendaraan = async (id, servisBerkalaKendaraan) => {
   ) {
     throw new Error("Data tidak lengkap");
   }
-  const Kendaraan = await kendaraanRepositori.getKendaraanById(
+  const Kendaraan = await kendaraanRepositori.getKendaraanByNoPol(
     servisBerkalaKendaraan.no_polisi
   );
 
