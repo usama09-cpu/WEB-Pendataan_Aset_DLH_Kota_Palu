@@ -16,10 +16,10 @@ const getAlatBeratById = async (id) => {
   return rows[0];
 };
 
-const getAlatBeratByNoRegistrasi = async (no_resgistrasi) => {
+const getAlatBeratByNoRegistrasi = async (no_registrasi) => {
   const [rows] = await conn.query(
     "SELECT * FROM alatberat WHERE no_registrasi = ?",
-    [no_resgistrasi]
+    [no_registrasi]
   );
   return rows[0];
 };

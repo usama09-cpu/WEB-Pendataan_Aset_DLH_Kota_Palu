@@ -9,7 +9,6 @@ import servisBerkalaKendaraanRepositori from "../repositori/servisBerkalaKendara
 import servisBerkalaAlatBeratRepositori from "../repositori/servisBerkalaAlatBerat-repositori.js";
 import servisBerkalaAlatKerjaRepositori from "../repositori/servisBerkalaAlatKerja-repositori.js";
 import servisBerkalaAcRepositori from "../repositori/servisBerkalaAc-repositori.js";
-import dayjs from "dayjs";
 
 const getServis = async () => {
   const dataList = await servisRepositori.getServis();
@@ -194,7 +193,7 @@ const inputServis = async (
       // // Update Servis berkala Alat Berat
       // if (existingAlatBerat) {
       //   const servisBerkalaAlatBerat =
-      //     await servisBerkalaAlatBeratRepositori.getServisBerkalaAlatBeratByNoReg(
+      //     await servisBerkalaAlatBeratRepositori.getServisBerkalaAlatBeratByNoRegistrasi(
       //       data.no_unik
       //     );
       //   if (item.nama_onderdil == "oli_mesin") {
@@ -317,7 +316,7 @@ const inputServis = async (
       // Update Servis berkala Alat Berat
       if (existingAlatBerat) {
         const servisBerkalaAlatBerat =
-          await servisBerkalaAlatBeratRepositori.getServisBerkalaAlatBeratByNoReg(
+          await servisBerkalaAlatBeratRepositori.getServisBerkalaAlatBeratByNoRegistrasi(
             data.no_unik
           );
 
@@ -539,7 +538,7 @@ const updateServis = async (
       // // Update Servis berkala Alat Berat
       // if (existingAlatBerat) {
       //   const servisBerkalaAlatBerat =
-      //     await servisBerkalaAlatBeratRepositori.getServisBerkalaAlatBeratByNoReg(
+      //     await servisBerkalaAlatBeratRepositori.getServisBerkalaAlatBeratByNoRegistrasi(
       //       data.no_unik
       //     );
       //   if (item.nama_onderdil == "oli_mesin") {
@@ -662,7 +661,7 @@ const updateServis = async (
       // Update Servis berkala Alat Berat
       if (existingAlatBerat) {
         const servisBerkalaAlatBerat =
-          await servisBerkalaAlatBeratRepositori.getServisBerkalaAlatBeratByNoReg(
+          await servisBerkalaAlatBeratRepositori.getServisBerkalaAlatBeratByNoRegistrasi(
             data.no_unik
           );
 

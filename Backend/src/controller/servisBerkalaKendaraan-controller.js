@@ -31,7 +31,7 @@ const getServisBerkalaKendaraanByNoPol = async (req, res) => {
 
 const updateServisBerkalaKendaraan = async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = req.params.id_serberkendaraan;
     const servisBerkalaKendaraan = req.body;
     await servisBerkalaKendaraanService.updateServisBerkalaKendaraan(
       id,
