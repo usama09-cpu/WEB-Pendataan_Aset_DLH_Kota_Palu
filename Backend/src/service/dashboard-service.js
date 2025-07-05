@@ -15,10 +15,10 @@ const getDashboard = async () => {
     R3: countR3.R3,
     R4: countR4.R4,
     R6: countR6.R6,
-    AlatBerat: countAlatBerat.AlatKerja,
-    AlatKerja: countAlatKerja.AlatBerat,
-    Ac: countAc.Ac,
-    Tanaman: countTanaman.Tanaman,
+    AlatBerat: countAlatBerat.alatberat,
+    AlatKerja: countAlatKerja.alatkerja,
+    Ac: countAc.ac,
+    Tanaman: countTanaman.tanaman,
   };
 
   return data;
