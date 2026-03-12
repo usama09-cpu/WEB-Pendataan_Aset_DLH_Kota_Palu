@@ -9,6 +9,7 @@ import servisBerkalaKendaraanRepositori from "../repositori/servisBerkalaKendara
 import servisBerkalaAlatBeratRepositori from "../repositori/servisBerkalaAlatBerat-repositori.js";
 import servisBerkalaAlatKerjaRepositori from "../repositori/servisBerkalaAlatKerja-repositori.js";
 import servisBerkalaAcRepositori from "../repositori/servisBerkalaAc-repositori.js";
+import { getAsetByNoUnik } from "../repositori/aset-repositori.js";
 
 const getServis = async () => {
   const dataList = await servisRepositori.getServis();
@@ -41,9 +42,7 @@ const getServisById = async (id) => {
 
 const getServisByNoUnik = async (no_unik) => {
   const dataList = await servisRepositori.getServisByNoUnik(no_unik);
-  if (dataList.length === 0) {
-    throw new Error("Data servis tidak ditemukan");
-  }
+  if (dataList.length === 0) throw new Error("Data servis tidak ditemukan");
 
   const dataWithOnderdil = await Promise.all(
     dataList.map(async (data) => {
@@ -88,7 +87,7 @@ const inputServis = async (
   const existingAlatKerja =
     await alatKerjaRepositori.getAlatKerjaByNoRegistrasi(data.no_unik);
 
-  const existingAC = await acRepositori.getACByNoRegistrasi(data.no_unik);
+  const existingAC = await acRepositori.getAcByNoRegistrasi(data.no_unik);
 
   if (
     !existingKendaraan &&
@@ -110,9 +109,17 @@ const inputServis = async (
     bufferGambarDokumentasi
   );
 
+  const aset = await getAsetByNoUnik(data.no_unik);
+
+  if (!aset) {
+    throw new Error("Aset tidak ditemukan");
+  }
+
+  const id_aset = aset.id_aset;
+
   const servis = await servisRepositori.createServis(
     data.tanggal,
-    data.no_unik,
+    id_aset,
     data.nama_bengkel,
     data.biaya_servis,
     nota,
@@ -131,117 +138,9 @@ const inputServis = async (
         throw new Error("Data onderdil tidak lengkap");
       }
 
-      // // Update Servis berkala Kendaraan
-      // if (existingKendaraan) {
-      //   const servisBerkalaKendaraan =
-      //     await servisBerkalaKendaraanRepositori.getServisBerkalaKendaraanByNoPol(
-      //       data.no_unik
-      //     );
-      //   if (item.nama_onderdil == "oli_mesin") {
-      //     await servisBerkalaKendaraanRepositori.updateServisBerkalaKendaraan(
-      //       servisBerkalaKendaraan.id_serberkendaraan,
-      //       servisBerkalaKendaraan.no_polisi,
-      //       data.tanggal,
-      //       servisBerkalaKendaraan.filter_oli_mesin,
-      //       servisBerkalaKendaraan.oli_gardan,
-      //       servisBerkalaKendaraan.oli_transmisi,
-      //       servisBerkalaKendaraan.ban
-      //     );
-      //   } else if (item.nama_onderdil == "filter_oli_mesin") {
-      //     await servisBerkalaKendaraanRepositori.updateServisBerkalaKendaraan(
-      //       servisBerkalaKendaraan.id_serberkendaraan,
-      //       servisBerkalaKendaraan.no_polisi,
-      //       servisBerkalaKendaraan.oli_mesin,
-      //       data.tanggal,
-      //       servisBerkalaKendaraan.oli_gardan,
-      //       servisBerkalaKendaraan.oli_transmisi,
-      //       servisBerkalaKendaraan.ban
-      //     );
-      //   } else if (item.nama_onderdil == "oli_gardan") {
-      //     await servisBerkalaKendaraanRepositori.updateServisBerkalaKendaraan(
-      //       servisBerkalaKendaraan.id_serberkendaraan,
-      //       servisBerkalaKendaraan.no_polisi,
-      //       servisBerkalaKendaraan.oli_mesin,
-      //       servisBerkalaKendaraan.filter_oli_mesin,
-      //       data.tanggal,
-      //       servisBerkalaKendaraan.oli_transmisi,
-      //       servisBerkalaKendaraan.ban
-      //     );
-      //   } else if (item.nama_onderdil == "oli_transmisi") {
-      //     await servisBerkalaKendaraanRepositori.updateServisBerkalaKendaraan(
-      //       servisBerkalaKendaraan.id_serberkendaraan,
-      //       servisBerkalaKendaraan.no_polisi,
-      //       servisBerkalaKendaraan.oli_mesin,
-      //       servisBerkalaKendaraan.filter_oli_mesin,
-      //       servisBerkalaKendaraan.oli_gardan,
-      //       data.tanggal,
-      //       servisBerkalaKendaraan.ban
-      //     );
-      //   } else if (item.nama_onderdil == "ban") {
-      //     await servisBerkalaKendaraanRepositori.updateServisBerkalaKendaraan(
-      //       servisBerkalaKendaraan.id_serberkendaraan,
-      //       servisBerkalaKendaraan.no_polisi,
-      //       servisBerkalaKendaraan.oli_mesin,
-      //       servisBerkalaKendaraan.filter_oli_mesin,
-      //       servisBerkalaKendaraan.oli_gardan,
-      //       servisBerkalaKendaraan.oli_transmisi,
-      //       data.tanggal
-      //     );
-      //   }
-      // }
-
-      // // Update Servis berkala Alat Berat
-      // if (existingAlatBerat) {
-      //   const servisBerkalaAlatBerat =
-      //     await servisBerkalaAlatBeratRepositori.getServisBerkalaAlatBeratByNoRegistrasi(
-      //       data.no_unik
-      //     );
-      //   if (item.nama_onderdil == "oli_mesin") {
-      //     await servisBerkalaAlatBeratRepositori.updateServisBerkalaAlatBerat(
-      //       servisBerkalaAlatBerat.id_serberalatberat,
-      //       servisBerkalaAlatBerat.no_registrasi,
-      //       data.tanggal,
-      //       servisBerkalaAlatBerat.filter_oli_mesin
-      //     );
-      //   } else if (item.nama_onderdil == "filter_oli_mesin") {
-      //     await servisBerkalaAlatBeratRepositori.updateServisBerkalaAlatBerat(
-      //       servisBerkalaAlatBerat.id_serberalatberat,
-      //       servisBerkalaAlatBerat.no_registrasi,
-      //       servisBerkalaAlatBerat.oli_mesin,
-      //       data.tanggal
-      //     );
-      //   }
-      // }
-
-      // // Update Servis berkala Alat Kerja
-      // if (existingAlatKerja) {
-      //   const servisBerkalaAlatKerja =
-      //     await servisBerkalaAlatKerjaRepositori.getServisBerkalaAlatKerjaByNoRegistrasi(
-      //       data.no_unik
-      //     );
-      //   if (item.nama_onderdil == "oli_mesin") {
-      //     await servisBerkalaAlatKerjaRepositori.updateServisBerkalaAlatKerja(
-      //       servisBerkalaAlatKerja.id_serberalatkerja,
-      //       servisBerkalaAlatKerja.no_registrasi,
-      //       data.tanggal
-      //     );
-      //   }
-      // }
-
-      // // Update Servis berkala Ac
-      // if (existingAC) {
-      //   const servisBerkalaAc =
-      //     await servisBerkalaAcRepositori.getServisBerkalaAcByNoRegistrasi(
-      //       data.no_unik
-      //     );
-      //   if (item.nama_onderdil == "cuci") {
-      //     await servisBerkalaAcRepositori.updateServisBerkalaAc(
-      //       servisBerkalaAc.id_serberac,
-      //       servisBerkalaAc.no_registrasi,
-      //       data.tanggal
-      //     );
-      //   }
-      // }
+      if (item.jumlah <= 0 || item.harga <= 0) {
+        throw new Error("Jumlah atau harga tidak boleh 0");
+      }
 
       // Update Servis berkala Kendaraan
       if (existingKendaraan) {
@@ -408,30 +307,20 @@ const updateServis = async (
   }
 
   const existingServis = await servisRepositori.getServisById(id);
-  if (!existingServis) {
-    throw new Error("Data servis tidak ditemukan");
-  }
+  if (!existingServis) throw new Error("Data servis tidak ditemukan");
+
+  const aset = await getAsetByNoUnik(data.no_unik);
+  if (!aset) throw new Error("Aset tidak ditemukan");
+  const id_aset = aset.id_aset;
 
   const existingKendaraan = await kendaraanRepositori.getKendaraanByNoPol(
     data.no_unik
   );
-
   const existingAlatBerat =
     await alatBeratRepositori.getAlatBeratByNoRegistrasi(data.no_unik);
-
   const existingAlatKerja =
     await alatKerjaRepositori.getAlatKerjaByNoRegistrasi(data.no_unik);
-
-  const existingAC = await acRepositori.getACByNoRegistrasi(data.no_unik);
-
-  if (
-    !existingKendaraan &&
-    !existingAlatBerat &&
-    !existingAlatKerja &&
-    !existingAC
-  ) {
-    throw new Error("Aset tidak ditemukan");
-  }
+  const existingAC = await acRepositori.getAcByNoRegistrasi(data.no_unik);
 
   let nota = existingServis.nota_pembayaran;
   let dokumentasi = existingServis.dokumentasi;
@@ -457,7 +346,7 @@ const updateServis = async (
   await servisRepositori.updateServis(
     id,
     data.tanggal,
-    data.no_unik,
+    id_aset,
     data.nama_bengkel,
     data.biaya_servis,
     nota,
@@ -475,118 +364,6 @@ const updateServis = async (
       if (!item.nama_onderdil || !item.jumlah || !item.harga) {
         throw new Error("Data onderdil tidak lengkap");
       }
-
-      // // Update Servis berkala Kendaraan
-      // if (existingKendaraan) {
-      //   const servisBerkalaKendaraan =
-      //     await servisBerkalaKendaraanRepositori.getServisBerkalaKendaraanByNoPol(
-      //       data.no_unik
-      //     );
-      //   if (item.nama_onderdil == "oli_mesin") {
-      //     await servisBerkalaKendaraanRepositori.updateServisBerkalaKendaraan(
-      //       servisBerkalaKendaraan.id_serberkendaraan,
-      //       servisBerkalaKendaraan.no_polisi,
-      //       data.tanggal,
-      //       servisBerkalaKendaraan.filter_oli_mesin,
-      //       servisBerkalaKendaraan.oli_gardan,
-      //       servisBerkalaKendaraan.oli_transmisi,
-      //       servisBerkalaKendaraan.ban
-      //     );
-      //   } else if (item.nama_onderdil == "filter_oli_mesin") {
-      //     await servisBerkalaKendaraanRepositori.updateServisBerkalaKendaraan(
-      //       servisBerkalaKendaraan.id_serberkendaraan,
-      //       servisBerkalaKendaraan.no_polisi,
-      //       servisBerkalaKendaraan.oli_mesin,
-      //       data.tanggal,
-      //       servisBerkalaKendaraan.oli_gardan,
-      //       servisBerkalaKendaraan.oli_transmisi,
-      //       servisBerkalaKendaraan.ban
-      //     );
-      //   } else if (item.nama_onderdil == "oli_gardan") {
-      //     await servisBerkalaKendaraanRepositori.updateServisBerkalaKendaraan(
-      //       servisBerkalaKendaraan.id_serberkendaraan,
-      //       servisBerkalaKendaraan.no_polisi,
-      //       servisBerkalaKendaraan.oli_mesin,
-      //       servisBerkalaKendaraan.filter_oli_mesin,
-      //       data.tanggal,
-      //       servisBerkalaKendaraan.oli_transmisi,
-      //       servisBerkalaKendaraan.ban
-      //     );
-      //   } else if (item.nama_onderdil == "oli_transmisi") {
-      //     await servisBerkalaKendaraanRepositori.updateServisBerkalaKendaraan(
-      //       servisBerkalaKendaraan.id_serberkendaraan,
-      //       servisBerkalaKendaraan.no_polisi,
-      //       servisBerkalaKendaraan.oli_mesin,
-      //       servisBerkalaKendaraan.filter_oli_mesin,
-      //       servisBerkalaKendaraan.oli_gardan,
-      //       data.tanggal,
-      //       servisBerkalaKendaraan.ban
-      //     );
-      //   } else if (item.nama_onderdil == "ban") {
-      //     await servisBerkalaKendaraanRepositori.updateServisBerkalaKendaraan(
-      //       servisBerkalaKendaraan.id_serberkendaraan,
-      //       servisBerkalaKendaraan.no_polisi,
-      //       servisBerkalaKendaraan.oli_mesin,
-      //       servisBerkalaKendaraan.filter_oli_mesin,
-      //       servisBerkalaKendaraan.oli_gardan,
-      //       servisBerkalaKendaraan.oli_transmisi,
-      //       data.tanggal
-      //     );
-      //   }
-      // }
-
-      // // Update Servis berkala Alat Berat
-      // if (existingAlatBerat) {
-      //   const servisBerkalaAlatBerat =
-      //     await servisBerkalaAlatBeratRepositori.getServisBerkalaAlatBeratByNoRegistrasi(
-      //       data.no_unik
-      //     );
-      //   if (item.nama_onderdil == "oli_mesin") {
-      //     await servisBerkalaAlatBeratRepositori.updateServisBerkalaAlatBerat(
-      //       servisBerkalaAlatBerat.id_serberalatberat,
-      //       servisBerkalaAlatBerat.no_registrasi,
-      //       data.tanggal,
-      //       servisBerkalaAlatBerat.filter_oli_mesin
-      //     );
-      //   } else if (item.nama_onderdil == "filter_oli_mesin") {
-      //     await servisBerkalaAlatBeratRepositori.updateServisBerkalaAlatBerat(
-      //       servisBerkalaAlatBerat.id_serberalatberat,
-      //       servisBerkalaAlatBerat.no_registrasi,
-      //       servisBerkalaAlatBerat.oli_mesin,
-      //       data.tanggal
-      //     );
-      //   }
-      // }
-
-      // // Update Servis berkala Alat Kerja
-      // if (existingAlatKerja) {
-      //   const servisBerkalaAlatKerja =
-      //     await servisBerkalaAlatKerjaRepositori.getServisBerkalaAlatKerjaByNoRegistrasi(
-      //       data.no_unik
-      //     );
-      //   if (item.nama_onderdil == "oli_mesin") {
-      //     await servisBerkalaAlatKerjaRepositori.updateServisBerkalaAlatKerja(
-      //       servisBerkalaAlatKerja.id_serberalatkerja,
-      //       servisBerkalaAlatKerja.no_registrasi,
-      //       data.tanggal
-      //     );
-      //   }
-      // }
-
-      // // Update Servis berkala Ac
-      // if (existingAC) {
-      //   const servisBerkalaAc =
-      //     await servisBerkalaAcRepositori.getServisBerkalaAcByNoRegistrasi(
-      //       data.no_unik
-      //     );
-      //   if (item.nama_onderdil == "cuci") {
-      //     await servisBerkalaAcRepositori.updateServisBerkalaAc(
-      //       servisBerkalaAc.id_serberac,
-      //       servisBerkalaAc.no_registrasi,
-      //       data.tanggal
-      //     );
-      //   }
-      // }
 
       // Update Servis berkala Kendaraan
       if (existingKendaraan) {
@@ -734,6 +511,7 @@ const updateServis = async (
   return { message: "Servis berhasil diperbarui" };
 };
 
+// Hapus Servis
 const deleteServis = async (id) => {
   const existingServis = await servisRepositori.getServisById(id);
   if (!existingServis) {

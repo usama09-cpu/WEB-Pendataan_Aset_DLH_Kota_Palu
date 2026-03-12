@@ -40,7 +40,14 @@ const login = async (username, password) => {
     throw new Error("Username tidak ditemukan");
   }
 
+  // console.log(user.password);
+  // console.log(password.length);
+  // const test = await bcrypt.hash(password, 10);
+  // console.log(test);
+  // console.log(await bcrypt.compare(password, test));
+
   const isPasswordCorrect = await bcrypt.compare(password, user.password);
+  // console.log(isPasswordCorrect);
   if (!isPasswordCorrect) {
     throw new Error("Password salah");
   }
@@ -58,9 +65,8 @@ const updateUser = async (id, username, password) => {
     throw new Error("Username tidak ditemukan");
   }
 
-  const existingUserByUsername = await userRepositori.getUserByUsername(
-    username
-  );
+  const existingUserByUsername =
+    await userRepositori.getUserByUsername(username);
   if (existingUserByUsername && existingUserByUsername.id_user != id) {
     throw new Error("Username sudah digunakan");
   }

@@ -24,6 +24,8 @@ const getKendaraanByNoPol = async (no_polisi) => {
 const createKendaraan = async (
   qrcode,
   gambar,
+  aset,
+  kode_barang,
   merek,
   no_polisi,
   no_mesin,
@@ -38,32 +40,39 @@ const createKendaraan = async (
   penggunaan,
   kondisi
 ) => {
-  return await conn.query(
-    "INSERT INTO kendaraan (qrcode, gambar, merek, no_polisi, no_mesin, no_rangka, warna, harga_pembelian, tahun_pembuatan, kategori, pajak, pemegang, nik, penggunaan, kondisi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    [
-      qrcode,
-      gambar,
-      merek,
-      no_polisi,
-      no_mesin,
-      no_rangka,
-      warna,
-      harga_pembelian,
-      tahun_pembuatan,
-      kategori,
-      pajak,
-      pemegang,
-      nik,
-      penggunaan,
-      kondisi,
-    ]
-  );
+  const sql = `
+  INSERT INTO kendaraan (
+    qrcode, gambar, id_aset, kode_barang, merek, no_polisi,
+    no_mesin, no_rangka, warna, harga_pembelian, tahun_pembuatan,
+    kategori, pajak, pemegang, nik, penggunaan, kondisi
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`;
+  await conn.query(sql, [
+    qrcode,
+    gambar,
+    aset,
+    kode_barang,
+    merek,
+    no_polisi,
+    no_mesin,
+    no_rangka,
+    warna,
+    harga_pembelian,
+    tahun_pembuatan,
+    kategori,
+    pajak,
+    pemegang,
+    nik,
+    penggunaan,
+    kondisi,
+  ]);
 };
 
 const updateKendaraan = async (
   id,
   qrcode,
   gambar,
+  kode_barang,
   merek,
   no_polisi,
   no_mesin,
@@ -79,10 +88,11 @@ const updateKendaraan = async (
   kondisi
 ) => {
   return await conn.query(
-    "UPDATE kendaraan SET qrcode = ?, gambar = ?, merek = ?, no_polisi = ?, no_mesin = ?, no_rangka = ?, warna = ?, harga_pembelian = ?, tahun_pembuatan = ?, kategori = ?, pajak = ?, pemegang = ?, nik = ?, penggunaan = ?, kondisi = ? WHERE id_kendaraan = ?",
+    "UPDATE kendaraan SET qrcode = ?, gambar = ?, kode_barang = ?, merek = ?, no_polisi = ?, no_mesin = ?, no_rangka = ?, warna = ?, harga_pembelian = ?, tahun_pembuatan = ?, kategori = ?, pajak = ?, pemegang = ?, nik = ?, penggunaan = ?, kondisi = ? WHERE id_kendaraan = ?",
     [
       qrcode,
       gambar,
+      kode_barang,
       merek,
       no_polisi,
       no_mesin,

@@ -1,5 +1,4 @@
 import conn from "../application/db.js";
-import qr from "../helper/qr.js";
 
 const getAc = async () => {
   const [rows] = await conn.query(
@@ -23,6 +22,9 @@ const getAcByNoRegistrasi = async (no_registrasi) => {
 const createAc = async (
   qrcode,
   gambar,
+  aset,
+  kode_barang,
+  nama_barang,
   merek,
   no_registrasi,
   no_serial,
@@ -34,29 +36,33 @@ const createAc = async (
   kondisi,
   keterangan
 ) => {
-  return await conn.query(
-    "INSERT INTO ac (qrcode, gambar, merek, no_registrasi, no_serial, ukuran, ruangan, asal, tahun_pembelian, harga_pembelian, kondisi, keterangan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    [
-      qrcode,
-      gambar,
-      merek,
-      no_registrasi,
-      no_serial,
-      ukuran,
-      ruangan,
-      asal,
-      tahun_pembelian,
-      harga_pembelian,
-      kondisi,
-      keterangan,
-    ]
-  );
+  const sql = `
+  INSERT INTO ac (qrcode, gambar, id_aset, kode_barang, nama_barang, merek, no_registrasi, no_serial, ukuran, ruangan, asal, tahun_pembelian, harga_pembelian, kondisi, keterangan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  await conn.query(sql, [
+    qrcode,
+    gambar,
+    aset,
+    kode_barang,
+    nama_barang,
+    merek,
+    no_registrasi,
+    no_serial,
+    ukuran,
+    ruangan,
+    asal,
+    tahun_pembelian,
+    harga_pembelian,
+    kondisi,
+    keterangan,
+  ]);
 };
 
 const updateAc = async (
   id,
   qrcode,
   gambar,
+  kode_barang,
+  nama_barang,
   merek,
   no_registrasi,
   no_serial,
@@ -69,10 +75,12 @@ const updateAc = async (
   keterangan
 ) => {
   return await conn.query(
-    "UPDATE ac SET qrcode = ?, gambar = ?, merek = ?, no_registrasi = ?, no_serial = ?, ukuran = ?, ruangan = ?, asal = ?, tahun_pembelian = ?, harga_pembelian = ?, kondisi = ?, keterangan = ? WHERE id_ac = ?",
+    "UPDATE ac SET qrcode = ?, gambar = ?, kode_barang = ?, nama_barang = ?, merek = ?, no_registrasi = ?, no_serial = ?, ukuran = ?, ruangan = ?, asal = ?, tahun_pembelian = ?, harga_pembelian = ?, kondisi = ?, keterangan = ? WHERE id_ac = ?",
     [
       qrcode,
       gambar,
+      kode_barang,
+      nama_barang,
       merek,
       no_registrasi,
       no_serial,

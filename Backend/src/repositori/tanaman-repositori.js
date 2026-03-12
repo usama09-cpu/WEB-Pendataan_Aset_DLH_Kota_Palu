@@ -13,17 +13,32 @@ const getTanamanById = async (id) => {
   return rows[0];
 };
 
-const createTanaman = async (gambar, nama, jenis, stok, keterangan) => {
+const createTanaman = async (
+  gambar,
+  kode_barang,
+  nama,
+  jenis,
+  stok,
+  keterangan
+) => {
   return await conn.query(
-    "INSERT INTO tanaman (gambar, nama, jenis, stok, keterangan) VALUES (?, ?, ?, ?, ?)",
-    [gambar, nama, jenis, stok, keterangan]
+    "INSERT INTO tanaman (gambar, kode_barang, nama, jenis, stok, keterangan) VALUES (?, ?, ?, ?, ?, ?)",
+    [gambar, kode_barang, nama, jenis, stok, keterangan]
   );
 };
 
-const updateTanaman = async (id, gambar, nama, jenis, stok, keterangan) => {
+const updateTanaman = async (
+  id,
+  gambar,
+  kode_barang,
+  nama,
+  jenis,
+  stok,
+  keterangan
+) => {
   return await conn.query(
-    "UPDATE tanaman SET gambar = ?, nama = ?, jenis = ?, stok = ?, keterangan = ? WHERE id_tanaman = ?",
-    [gambar, nama, jenis, stok, keterangan, id]
+    "UPDATE tanaman SET gambar = ?, kode_barang = ?, nama = ?, jenis = ?, stok = ?, keterangan = ? WHERE id_tanaman = ?",
+    [gambar, kode_barang, nama, jenis, stok, keterangan, id]
   );
 };
 

@@ -44,6 +44,7 @@ const inputTanamanMasuk = async (data) => {
   await tanamanRepositori.updateTanaman(
     data.id_tanaman,
     tanaman.gambar,
+    tanaman.kode_barang,
     tanaman.nama,
     tanaman.jenis,
     tanaman.stok,
@@ -91,6 +92,7 @@ const updateTanamanMasuk = async (id, data) => {
   await tanamanRepositori.updateTanaman(
     data.id_tanaman,
     tanaman.gambar,
+    tanaman.kode_barang,
     tanaman.nama,
     tanaman.jenis,
     tanaman.stok,
@@ -128,13 +130,12 @@ const deleteTanamanMasuk = async (id) => {
   await tanamanRepositori.updateTanaman(
     tanamanMasuk.id_tanaman,
     tanaman.gambar,
+    tanaman.kode_barang,
     tanaman.nama,
     tanaman.jenis,
     tanaman.stok,
     tanaman.keterangan
   );
-
-  console.log(tanaman.stok);
 
   return await tanamanMasukRepositori.deleteTanamanMasuk(id);
 };

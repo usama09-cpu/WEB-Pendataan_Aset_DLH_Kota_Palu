@@ -31,7 +31,7 @@ const getServisBerkalaAlatKerjaByNoRegistrasi = async (req, res) => {
 
 const updateServisBerkalaAlatKerja = async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = req.params.id_serberalatkerja;
     const servisBerkalaAlatKerja = req.body;
     await servisBerkalaAlatKerjaService.updateServisBerkalaAlatKerja(
       id,

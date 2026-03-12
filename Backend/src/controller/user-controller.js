@@ -1,3 +1,4 @@
+import path from "path";
 import userService from "../service/user-service.js";
 import jwt from "jsonwebtoken";
 
@@ -32,33 +33,6 @@ const register = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const user = await userService.login(username, password);
-    const token = jwt.sign({ id: user.id }, process.env.TOKEN, {
-      expiresIn: "1d",
-    });
-    res.cookie("token", token, {
-      httpOnly: true,
-      // secure: process.env.NODE_ENV === "production" ? true : false,
-      secure: false,
-      sameSite: "None",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 1000,
-    });
-
-    res.status(200).json({
-      message: "berhasil login",
-      id_user: user.id_user,
-      username: user.username,
-      token: token,
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 const updateUser = async (req, res) => {
   try {
     const id = req.params.id;
@@ -80,13 +54,49 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await userService.login(username, password);
+    const token = jwt.sign({ id: user.id }, process.env.TOKEN, {
+      expiresIn: "1d",
+    });
+    res.cookie("token", token, {
+      httpOnly: true,
+      // rule deploy
+      secure: true,
+      sameSite: "None",
+      // rule local
+      // secure: false,
+      // secure: process.env.NODE_ENV === "production",
+      // sameSite: "Lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 1000, // 1 hari
+    });
+
+    res.status(200).json({
+      message: "berhasil login",
+      id_user: user.id_user,
+      username: user.username,
+      token: token,
+      role: user.role,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const logout = async (req, res) => {
   try {
     res.clearCookie("token", {
       httpOnly: true,
-      // secure: process.env.NODE_ENV === "production" ? true : false,
-      secure: false,
+      // rule deploy
+      secure: true,
       sameSite: "None",
+      // rule local
+      // secure: false,
+      // secure: process.env.NODE_ENV === "production",
+      // sameSite: "Lax",
       path: "/",
     });
 

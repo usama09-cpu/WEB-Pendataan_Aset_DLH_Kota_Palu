@@ -1,5 +1,4 @@
 import express from "express";
-import { publicRouter } from "../route/public-api.js";
 import { userRouter } from "../route/api.js";
 import dotEnv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -17,9 +16,10 @@ const web = express();
 
 web.use(
   cors({
-    origin: "http://localhost:5173", // HARUS alamat spesifik, bukan '*'
+    // origin: "https://simadlh.org",
+    origin: "http://localhost:5173",
     credentials: true,
-  })
+  }),
 );
 
 web.use(express.json());

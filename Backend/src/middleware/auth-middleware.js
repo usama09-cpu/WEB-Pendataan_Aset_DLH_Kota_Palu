@@ -1,36 +1,23 @@
 import jwt from "jsonwebtoken";
 
 const authMiddleware = (req, res, next) => {
-  // Ambil token dari header Authorization
-  const tokenFromHeader =
-    req.headers.authorization && req.headers.authorization.split(" ")[1];
+  const token = req.cookies.token;
 
-  // Ambil token dari cookies
-  const tokenFromCookie = req.cookies.token;
-
-  // Cek apakah token ada di header dan cookies
-  if (!tokenFromHeader || !tokenFromCookie) {
+  if (!token) {
     return res
       .status(401)
       .json({ message: "Akses ditolak. Token tidak ditemukan." });
   }
 
-  // Cek apakah token dari header dan cookies tidak sama
-  if (tokenFromHeader != tokenFromCookie) {
-    return res
-      .status(401)
-      .json({ message: "Akses ditolak. Token tidak valid." });
-  }
-
   try {
-    // Verifikasi token dari header
-    const decoded = jwt.verify(tokenFromHeader, process.env.TOKEN);
-    req.user = decoded; // Simpan data user di req.user
+    const decoded = jwt.verify(token, process.env.TOKEN);
+    req.user = decoded;
     next();
   } catch (err) {
-    return res
-      .status(403)
-      .json({ message: "Token tidak valid atau sudah kadaluarsa." });
+    if (err.name === "TokenExpiredError") {
+      return res.status(403).json({ message: "Token sudah kadaluarsa." });
+    }
+    return res.status(403).json({ message: "Token tidak valid." });
   }
 };
 

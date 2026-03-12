@@ -23,6 +23,7 @@ const inputTanaman = async (namaGambar, bufferGambar, tanaman) => {
   if (
     !namaGambar ||
     !bufferGambar ||
+    !tanaman.kode_barang ||
     !tanaman.nama ||
     !tanaman.jenis ||
     !tanaman.stok ||
@@ -37,6 +38,7 @@ const inputTanaman = async (namaGambar, bufferGambar, tanaman) => {
   );
   return await tanamanRepositori.createTanaman(
     gambarBaru,
+    tanaman.kode_barang,
     tanaman.nama,
     tanaman.jenis,
     tanaman.stok,
@@ -61,6 +63,7 @@ const updateTanaman = async (id, namaGambar, bufferGambar, tanaman) => {
   return await tanamanRepositori.updateTanaman(
     id,
     gambarBaru,
+    tanaman.kode_barang,
     tanaman.nama,
     tanaman.jenis,
     tanaman.stok,

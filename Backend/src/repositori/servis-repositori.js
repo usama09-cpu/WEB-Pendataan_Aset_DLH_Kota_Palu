@@ -7,7 +7,11 @@ const getServis = async () => {
 
 const getServisByNoUnik = async (no_unik) => {
   const [rows] = await conn.query(
-    "SELECT * FROM servis WHERE no_unik = ? ORDER BY tanggal DESC",
+    `SELECT s.*, a.id_aset, a.no_unik, a.jenis
+     FROM servis s
+     JOIN aset a ON s.id_aset = a.id_aset
+     WHERE a.no_unik = ?
+     ORDER BY s.tanggal DESC`,
     [no_unik]
   );
   return rows;
@@ -22,15 +26,15 @@ const getServisById = async (id) => {
 
 const createServis = async (
   tanggal,
-  no_unik,
+  id_aset,
   nama_bengkel,
   biaya_servis,
   nota_pembayaran,
   dokumentasi
 ) => {
   const [rows] = await conn.query(
-    "INSERT INTO servis (tanggal, no_unik, nama_bengkel, biaya_servis, nota_pembayaran, dokumentasi) VALUES (?, ?, ?, ?, ?, ?)",
-    [tanggal, no_unik, nama_bengkel, biaya_servis, nota_pembayaran, dokumentasi]
+    "INSERT INTO servis (tanggal, id_aset, nama_bengkel, biaya_servis, nota_pembayaran, dokumentasi) VALUES (?, ?, ?, ?, ?, ?)",
+    [tanggal, id_aset, nama_bengkel, biaya_servis, nota_pembayaran, dokumentasi]
   );
   return rows;
 };
@@ -38,17 +42,17 @@ const createServis = async (
 const updateServis = async (
   id,
   tanggal,
-  no_unik,
+  id_aset,
   nama_bengkel,
   biaya_servis,
   nota_pembayaran,
   dokumentasi
 ) => {
   return await conn.query(
-    "UPDATE servis SET tanggal = ?, no_unik = ?, nama_bengkel = ?, biaya_servis = ?, nota_pembayaran = ?, dokumentasi = ? WHERE id_servis = ?",
+    "UPDATE servis SET tanggal = ?, id_aset = ?, nama_bengkel = ?, biaya_servis = ?, nota_pembayaran = ?, dokumentasi = ? WHERE id_servis = ?",
     [
       tanggal,
-      no_unik,
+      id_aset,
       nama_bengkel,
       biaya_servis,
       nota_pembayaran,
@@ -62,8 +66,8 @@ const deleteServis = async (id) => {
   return await conn.query("DELETE FROM servis WHERE id_servis = ?", [id]);
 };
 
-const deleteServisByNoUnik = async (no_unik) => {
-  return await conn.query("DELETE FROM servis WHERE no_unik = ?", [no_unik]);
+const deleteServisByIdAset = async (id_aset) => {
+  return await conn.query("DELETE FROM servis WHERE id_aset = ?", [id_aset]);
 };
 
 export default {
@@ -73,5 +77,5 @@ export default {
   createServis,
   updateServis,
   deleteServis,
-  deleteServisByNoUnik,
+  deleteServisByIdAset,
 };

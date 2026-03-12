@@ -9,6 +9,8 @@ const getDashboard = async () => {
   const countAlatKerja = (await dashboardRepositori.getCountAlatKerja()) ?? 0;
   const countAc = (await dashboardRepositori.getCountAc()) ?? 0;
   const countTanaman = (await dashboardRepositori.getCountTanaman()) ?? 0;
+  const countTaman = (await dashboardRepositori.getCountTaman()) ?? 0;
+  const countTPU = (await dashboardRepositori.getCountTPU()) ?? 0;
 
   const data = {
     R2: countR2.R2,
@@ -19,6 +21,8 @@ const getDashboard = async () => {
     AlatKerja: countAlatKerja.alatkerja,
     Ac: countAc.ac,
     Tanaman: countTanaman.tanaman,
+    Taman: countTaman.Taman,
+    TPU: countTPU.TPU,
   };
 
   return data;

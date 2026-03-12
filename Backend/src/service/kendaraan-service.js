@@ -5,6 +5,11 @@ import servisBerkalaKendaraanRepositori from "../repositori/servisBerkalaKendara
 import alatBeratRepositori from "../repositori/alatBerat-repositori.js";
 import alatKerjaRepositori from "../repositori/alatKerja-repositori.js";
 import acRepositori from "../repositori/ac-repositori.js";
+import {
+  createAset,
+  deleteAset,
+  updateAset,
+} from "../repositori/aset-repositori.js";
 import image from "../helper/image.js";
 import qrcode from "../helper/qr.js";
 import dayjs from "dayjs";
@@ -29,6 +34,7 @@ const inputKendaraan = async (namaGambar, bufferGambar, kendaraan) => {
   if (
     !namaGambar ||
     !bufferGambar ||
+    !kendaraan.kode_barang ||
     !kendaraan.merek ||
     !kendaraan.no_polisi ||
     !kendaraan.no_mesin ||
@@ -54,10 +60,10 @@ const inputKendaraan = async (namaGambar, bufferGambar, kendaraan) => {
     throw new Error("Nomor polisi kendaraan sudah ada");
   }
 
-  const existingNoRegAlatBerat =
+  const existingAlatBerat =
     await alatBeratRepositori.getAlatBeratByNoRegistrasi(kendaraan.no_polisi);
 
-  if (existingNoRegAlatBerat) {
+  if (existingAlatBerat) {
     throw new Error("Nomor polisi kendaraan sudah ada");
   }
 
@@ -91,18 +97,13 @@ const inputKendaraan = async (namaGambar, bufferGambar, kendaraan) => {
     800
   );
 
-  await servisBerkalaKendaraanRepositori.createServisBerkalaKendaraan(
-    kendaraan.no_polisi,
-    dayjs().format("YYYY-MM-DD"),
-    dayjs().format("YYYY-MM-DD"),
-    dayjs().format("YYYY-MM-DD"),
-    dayjs().format("YYYY-MM-DD"),
-    dayjs().format("YYYY-MM-DD")
-  );
+  const aset = await createAset(kendaraan.no_polisi, "kendaraan");
 
-  return await kendaraanRepositori.createKendaraan(
+  await kendaraanRepositori.createKendaraan(
     qrCode,
     uploadedImage,
+    aset,
+    kendaraan.kode_barang,
     kendaraan.merek,
     kendaraan.no_polisi,
     kendaraan.no_mesin,
@@ -117,11 +118,22 @@ const inputKendaraan = async (namaGambar, bufferGambar, kendaraan) => {
     kendaraan.penggunaan,
     kendaraan.kondisi
   );
+
+  await servisBerkalaKendaraanRepositori.createServisBerkalaKendaraan(
+    kendaraan.no_polisi,
+    dayjs().format("YYYY-MM-DD"),
+    dayjs().format("YYYY-MM-DD"),
+    dayjs().format("YYYY-MM-DD"),
+    dayjs().format("YYYY-MM-DD"),
+    dayjs().format("YYYY-MM-DD")
+  );
 };
 
 // Memperbarui data kendaraan
 const updateKendaraan = async (id, namaGambar, bufferGambar, kendaraan) => {
   if (
+    !kendaraan.id_aset ||
+    !kendaraan.kode_barang ||
     !kendaraan.merek ||
     !kendaraan.no_polisi ||
     !kendaraan.no_mesin ||
@@ -152,10 +164,10 @@ const updateKendaraan = async (id, namaGambar, bufferGambar, kendaraan) => {
     throw new Error("Nomor polisi kendaraan sudah ada");
   }
 
-  const existingNoRegAlatBerat =
+  const existingAlatBerat =
     await alatBeratRepositori.getAlatBeratByNoRegistrasi(kendaraan.no_polisi);
 
-  if (existingNoRegAlatBerat) {
+  if (existingAlatBerat) {
     throw new Error("Nomor polisi kendaraan sudah ada");
   }
 
@@ -178,19 +190,6 @@ const updateKendaraan = async (id, namaGambar, bufferGambar, kendaraan) => {
   let qrCodeBaru = existingKendaraan.qrcode;
 
   if (kendaraan.no_polisi !== existingKendaraan.no_polisi) {
-    const serberkendaraan =
-      await servisBerkalaKendaraanRepositori.getServisBerkalaKendaraanByNoPol(
-        existingKendaraan.no_polisi
-      );
-    await servisBerkalaKendaraanRepositori.updateServisBerkalaKendaraan(
-      serberkendaraan.id_serberkendaraan,
-      kendaraan.no_polisi,
-      serberkendaraan.oli_mesin,
-      serberkendaraan.filter_oli_mesin,
-      serberkendaraan.oli_gardan,
-      serberkendaraan.oli_transmisi,
-      serberkendaraan.ban
-    );
     await image.deleteImage("kendaraan/qrcode", existingKendaraan.qrcode);
     const bufferQrCode = await qrcode.generateQRCode(kendaraan.no_polisi);
     qrCodeBaru = await image.uploadImage(
@@ -198,24 +197,6 @@ const updateKendaraan = async (id, namaGambar, bufferGambar, kendaraan) => {
       kendaraan.no_polisi + ".png",
       bufferQrCode
     );
-    const servisKendaraan = await servisRepositori.getServisByNoUnik(
-      existingKendaraan.no_polisi
-    );
-    if (servisKendaraan.length > 0) {
-      await Promise.all(
-        servisKendaraan.map(async (data) => {
-          await servisRepositori.updateServis(
-            data.id_servis,
-            data.tanggal,
-            kendaraan.no_polisi,
-            data.nama_bengkel,
-            data.biaya_servis,
-            data.nota_pembayaran,
-            data.dokumentasi
-          );
-        })
-      );
-    }
   }
 
   if (namaGambar && bufferGambar) {
@@ -229,10 +210,11 @@ const updateKendaraan = async (id, namaGambar, bufferGambar, kendaraan) => {
     );
   }
 
-  return await kendaraanRepositori.updateKendaraan(
+  await kendaraanRepositori.updateKendaraan(
     id,
     qrCodeBaru,
     gambarBaru,
+    kendaraan.kode_barang,
     kendaraan.merek,
     kendaraan.no_polisi,
     kendaraan.no_mesin,
@@ -247,6 +229,7 @@ const updateKendaraan = async (id, namaGambar, bufferGambar, kendaraan) => {
     kendaraan.penggunaan,
     kendaraan.kondisi
   );
+  await updateAset(kendaraan.id_aset, kendaraan.no_polisi);
 };
 
 // Menghapus kendaraan berdasarkan ID
@@ -255,26 +238,36 @@ const deleteKendaraan = async (id) => {
   if (!kendaraan) {
     throw new Error("Kendaraan tidak ditemukan");
   }
+
+  // Hapus semua data servis yang terkait
   const servis = await servisRepositori.getServisByNoUnik(kendaraan.no_polisi);
 
   if (servis.length > 0) {
     await Promise.all(
       servis.map(async (data) => {
-        await image.deleteImage("servis/nota", data.nota_pembayaran);
-        await image.deleteImage("servis/dokumentasi", data.dokumentasi);
+        if (data.nota_pembayaran && data.nota_pembayaran.trim() !== "") {
+          await image.deleteImage("servis/nota", data.nota_pembayaran);
+        }
+        if (data.dokumentasi && data.dokumentasi.trim() !== "") {
+          await image.deleteImage("servis/dokumentasi", data.dokumentasi);
+        }
+
         await onderdilRepositori.deleteOnderdilByIdServis(data.id_servis);
       })
     );
-    await servisRepositori.deleteServisByNoUnik(kendaraan.no_polisi);
+
+    await servisRepositori.deleteServisByIdAset(kendaraan.no_polisi);
   }
 
-  await servisBerkalaKendaraanRepositori.deleteServisBerkalaKendaraanByNoPol(
-    kendaraan.no_polisi
-  );
-  await image.deleteImage("kendaraan/qrcode", kendaraan.qrcode);
-  await image.deleteImage("kendaraan", kendaraan.gambar);
+  if (kendaraan.qrcode && kendaraan.qrcode.trim() !== "") {
+    await image.deleteImage("kendaraan/qrcode", kendaraan.qrcode);
+  }
+  if (kendaraan.gambar && kendaraan.gambar.trim() !== "") {
+    await image.deleteImage("kendaraan", kendaraan.gambar);
+  }
 
-  return await kendaraanRepositori.deleteKendaraan(id);
+  await kendaraanRepositori.deleteKendaraan(id);
+  await deleteAset(kendaraan.id_aset);
 };
 
 export default {
