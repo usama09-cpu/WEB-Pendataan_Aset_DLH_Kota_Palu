@@ -17,18 +17,18 @@ const getUserById = async (id) => {
   return rows[0];
 };
 
-const createUser = async (username, password) => {
+const createUser = async (username, password, role) => {
   const [result] = await conn.query(
-    "INSERT INTO user (username, password) VALUES (?, ?)",
-    [username, password]
+    "INSERT INTO user (username, password, role) VALUES (?, ?, ?)",
+    [username, password, role],
   );
   return result;
 };
 
-const updateUser = async (id, username, password) => {
+const updateUser = async (id, username, password, role) => {
   const [result] = await conn.query(
-    "UPDATE user SET username = ?, password = ? WHERE id_user = ?",
-    [username, password, id]
+    "UPDATE user SET username = ?, password = ?, role = ? WHERE id_user = ?",
+    [username, password, role, id],
   );
   return result.affectedRows;
 };

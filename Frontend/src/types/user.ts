@@ -1,19 +1,27 @@
-interface UserData {
-  id: number;
+export interface UserData {
+  id_user: number;
   username: string;
+  password: string;
+  role: string;
 }
 
 export const users: UserData[] = [
   {
-    id: 1,
+    id_user: 1,
     username: "Kepala Dinas",
+    password: "kadisDLH-01",
+    role: "kepalaDinas",
   },
   {
-    id: 2,
+    id_user: 2,
     username: "Bendahara",
+    password: "bendaharaDLH-02",
+    role: "bendahara",
   },
   {
-    id: 3,
+    id_user: 3,
     username: "Admin",
+    password: "adminDLH-03",
+    role: "admin",
   },
 ];

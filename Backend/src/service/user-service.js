@@ -13,9 +13,9 @@ const getUserById = async (id) => {
   return user;
 };
 
-const register = async (username, password) => {
-  if (!username || !password) {
-    throw new Error("Username atau password harus diisi");
+const register = async (username, password, role) => {
+  if (!username || !password || !role) {
+    throw new Error("Username, password, dan role harus diisi");
   }
 
   const existingUser = await userRepositori.getUserByUsername(username);
@@ -24,7 +24,7 @@ const register = async (username, password) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  await userRepositori.createUser(username, hashedPassword);
+  await userRepositori.createUser(username, hashedPassword, role);
 
   // Ambil data user yang baru dibuat
   return userRepositori.getUserByUsername(username);
@@ -55,9 +55,9 @@ const login = async (username, password) => {
   return user;
 };
 
-const updateUser = async (id, username, password) => {
-  if (!username || !password) {
-    throw new Error("Username atau password harus diisi");
+const updateUser = async (id, username, password, role) => {
+  if (!username || !password || !role) {
+    throw new Error("Username, password, dan role harus diisi");
   }
 
   const existingUser = await userRepositori.getUserById(id);
@@ -72,7 +72,7 @@ const updateUser = async (id, username, password) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  return userRepositori.updateUser(id, username, hashedPassword);
+  return userRepositori.updateUser(id, username, hashedPassword, role);
 };
 
 const deleteUser = async (id) => {

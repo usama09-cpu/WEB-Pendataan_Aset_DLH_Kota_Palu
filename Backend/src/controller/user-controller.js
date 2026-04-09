@@ -25,8 +25,8 @@ const getUserById = async (req, res) => {
 
 const register = async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const user = await userService.register(username, password);
+    const { username, password, role } = req.body;
+    const user = await userService.register(username, password, role);
     res.status(201).json({ message: "berhasil register", data: user });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -36,8 +36,8 @@ const register = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const id = req.params.id;
-    const { username, password } = req.body;
-    await userService.updateUser(id, username, password);
+    const { username, password, role } = req.body;
+    await userService.updateUser(id, username, password, role);
     res.status(200).json({ message: "berhasil update" });
   } catch (error) {
     res.status(500).json({ message: error.message });

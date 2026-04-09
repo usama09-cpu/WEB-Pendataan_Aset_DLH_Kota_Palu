@@ -17,6 +17,7 @@ const RESOURCES = [
   "serberKendaraan",
   "serberAlatBerat",
   "serberAlatKerja",
+  "user",
 ] as const;
 
 const FULL_ACCESS: Permission[] = ["create", "read", "update", "delete"];
