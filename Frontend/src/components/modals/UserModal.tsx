@@ -32,12 +32,12 @@ export default function UserModal({
 
   return createPortal(
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black/40 z-[99999]"
-      onClick={onClose} // klik luar close
+      className="fixed inset-0 flex items-center justify-center bg-black/60 z-[99999]"
+      onClick={onClose}
     >
       <div
-        className="bg-white p-6 rounded-xl w-80 space-y-4 shadow-lg"
-        onClick={(e) => e.stopPropagation()} // biar tidak close saat klik dalam
+        className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white p-6 rounded-xl w-80 space-y-4 shadow-lg"
+        onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-lg font-semibold">
           {isAddMode ? "Tambah User" : "Edit User"}
@@ -50,7 +50,7 @@ export default function UserModal({
           onChange={(e) =>
             setForm({ ...form, username: e.target.value })
           }
-          className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Username"
           autoComplete="username"
         />
@@ -61,7 +61,7 @@ export default function UserModal({
           onChange={(e) =>
             setForm({ ...form, role: e.target.value })
           }
-          className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">-- Pilih Role --</option>
           <option value="kepalaDinas">kepalaDinas</option>
@@ -76,7 +76,7 @@ export default function UserModal({
           onChange={(e) =>
             setForm({ ...form, password: e.target.value })
           }
-          className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Password"
           autoComplete="new-password"
         />
@@ -85,7 +85,7 @@ export default function UserModal({
         <div className="flex justify-end gap-2 pt-2">
           <button
             onClick={onClose}
-            className="border px-3 py-1 rounded hover:bg-gray-100"
+            className="border dark:border-gray-600 px-3 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
           >
             Batal
           </button>

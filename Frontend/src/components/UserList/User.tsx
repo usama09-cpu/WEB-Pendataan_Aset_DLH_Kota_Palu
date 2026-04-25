@@ -31,7 +31,7 @@ import {
 import api from "../../services/api";
 import { UserData } from "../../types/user";
 
-// ✅ MODAL
+// MODAL
 import UserModal from "../modals/UserModal";
 
 export default function UserTable() {
@@ -41,7 +41,6 @@ export default function UserTable() {
   const { data, setData, loading, fetchData } =
     useFetch<UserData>("/api/user");
 
-  // 🔥 FIX: trigger fetch pertama
   useEffect(() => {
     fetchData();
   }, []);
@@ -136,7 +135,7 @@ export default function UserTable() {
 
       setIsModalOpen(false);
       setSelected(null);
-      fetchData(); // refresh data
+      fetchData();
     } catch (err) {
       console.error("Gagal simpan:", err);
     }
@@ -164,7 +163,8 @@ export default function UserTable() {
   ]);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+
       {/* HEADER */}
       <div className="p-4 flex justify-between items-center">
         {roleAuth && hakAkses(roleAuth, "user", "create") && (
@@ -190,84 +190,107 @@ export default function UserTable() {
 
       {/* TABLE */}
       {loading ? (
-        <p className="p-4 text-gray-500">Loading...</p>
+        <p className="p-4 text-gray-500 dark:text-gray-300">
+          Loading...
+        </p>
       ) : (
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableCell isHeader className="text-center">
-                  Username
-                </TableCell>
-                <TableCell isHeader className="text-center">
-                  Role
-                </TableCell>
-                <TableCell isHeader className="text-center">
-                  Password
-                </TableCell>
-                <TableCell isHeader className="text-center">
-                  Aksi
-                </TableCell>
-              </TableRow>
-            </TableHeader>
-
-            <TableBody>
-              {paginatedData.length === 0 ? (
+        <div className="max-w-full overflow-x-auto">
+          <div className="min-w-[600px]">
+            <Table>
+              
+              {/* HEADER */}
+              <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-4">
-                    Tidak ada data
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-bold text-center text-sm text-gray-700 dark:text-gray-400"
+                  >
+                    Username
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-bold text-center text-sm text-gray-700 dark:text-gray-400"
+                  >
+                    Role
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-bold text-center text-sm text-gray-700 dark:text-gray-400"
+                  >
+                    Password
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-bold text-center text-sm text-gray-700 dark:text-gray-400"
+                  >
+                    Aksi
                   </TableCell>
                 </TableRow>
-              ) : (
-                paginatedData.map((user) => (
-                  <TableRow key={user.id_user}>
-                    <TableCell className="text-center">
-                      {user.username}
-                    </TableCell>
+              </TableHeader>
 
-                    <TableCell className="text-center">
-                      {user.role}
-                    </TableCell>
-
-                    <TableCell className="text-center">
-                      ********
-                    </TableCell>
-
-                    <TableCell className="text-center">
-                      <div className="flex justify-center gap-2">
-                        {roleAuth &&
-                          hakAkses(roleAuth, "user", "update") && (
-                            <EditButton
-                              onClick={() =>
-                                handleEdit(user.id_user)
-                              }
-                            />
-                          )}
-
-                        {roleAuth &&
-                          hakAkses(roleAuth, "user", "delete") && (
-                            <DeleteButton
-                              onClick={() =>
-                                handleDelete(user.id_user)
-                              }
-                            />
-                          )}
-                      </div>
+              {/* BODY */}
+              <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+                {paginatedData.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={4}
+                      className="text-center py-4 text-gray-400 dark:text-gray-500"
+                    >
+                      Tidak ada data
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+                ) : (
+                  paginatedData.map((user) => (
+                    <TableRow key={user.id_user}>
+                      <TableCell className="px-5 py-3 text-center text-sm font-medium text-gray-600 dark:text-gray-400">
+                        {user.username}
+                      </TableCell>
 
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            itemsPerPage={itemsPerPage}
-            totalData={data.length}
-            getPageNumbers={getPageNumbers}
-            onPageChange={setCurrentPage}
-          />
+                      <TableCell className="px-5 py-3 text-center text-sm font-medium text-gray-600 dark:text-gray-400">
+                        {user.role}
+                      </TableCell>
+
+                      <TableCell className="px-5 py-3 text-center text-sm font-medium text-gray-600 dark:text-gray-400">
+                        ********
+                      </TableCell>
+
+                      <TableCell className="px-5 py-3 text-center text-sm font-medium text-gray-600 dark:text-gray-400">
+                        <div className="flex justify-center gap-2">
+                          {roleAuth &&
+                            hakAkses(roleAuth, "user", "update") && (
+                              <EditButton
+                                onClick={() =>
+                                  handleEdit(user.id_user)
+                                }
+                              />
+                            )}
+
+                          {roleAuth &&
+                            hakAkses(roleAuth, "user", "delete") && (
+                              <DeleteButton
+                                onClick={() =>
+                                  handleDelete(user.id_user)
+                                }
+                              />
+                            )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+
+            {/* PAGINATION */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              itemsPerPage={itemsPerPage}
+              totalData={data.length}
+              getPageNumbers={getPageNumbers}
+              onPageChange={setCurrentPage}
+            />
+          </div>
         </div>
       )}
 
