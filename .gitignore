@@ -1,6 +1,3 @@
-backend/.env
-frontend/.env
-Backend/.env
-Frontend/.env
-Backend/.env
-Frontend/.env
+.env
+.env.*
+**/.env
