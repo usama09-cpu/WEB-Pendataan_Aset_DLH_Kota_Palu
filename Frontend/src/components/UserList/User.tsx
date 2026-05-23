@@ -166,7 +166,7 @@ export default function UserTable() {
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
 
       {/* HEADER */}
-      <div className="p-4 flex justify-between items-center">
+      <div className="overflow-x-auto p-4 flex justify-between items-center sm:flex-wrap gap-2">
         {roleAuth && hakAkses(roleAuth, "user", "create") && (
           <AddButton onClick={handleAdd} />
         )}
